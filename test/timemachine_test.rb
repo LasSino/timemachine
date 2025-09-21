@@ -84,11 +84,12 @@ describe TimeMachine do
       counter = 0
       handlers = []
       sleep(5)
+      500.times { handlers << @time_machine.after(1, record_result: false) { counter += 1 } }
       500.times { handlers << @time_machine.after(5, record_result: false) { counter += 1 } }
       sleep(3)
       handlers.each { |h| @time_machine.cancel(h) }
       sleep(3)
-      _(counter).must_equal 0
+      _(counter).must_equal 500
     end
 
     it 'can cancel tasks correctly and record results' do

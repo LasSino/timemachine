@@ -158,7 +158,7 @@ module TimeMachine
         end
       end
 
-      @result_queue.delete(handle) unless result_slot.record_result
+      @result_queue.delete(handle) unless result_slot&.record_result
     end
 
     def _bg_dispatchTask(task)
