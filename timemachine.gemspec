@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "timemachine"
-  s.version     = "0.1.0"
+  s.version     = "1.0.0"
   s.summary     = "A library that executes task after timeup or timeout."
   s.description = "A library that executes task after timeup or timeout."
   s.authors     = ["LTW"]
@@ -11,6 +11,6 @@ Gem::Specification.new do |s|
     "lib/executor.rb"
   ]
   s.homepage    =
-    "https://nx.domain"
+    "https://github.com/LasSino/timemachine"
   s.license       = "MIT"
 end
