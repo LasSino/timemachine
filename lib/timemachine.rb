@@ -39,9 +39,10 @@ module TimeMachine
     # Create a new `TimeMachine`.
     #
     # @param [Executors::Executor] executor The task executor to be used. Defaults to a `Executors::ThreadExecutor`.
-    # @param [Boolean] more_timely Use a lock in scheduler. This theoretically makes the tasks executed more timely
-    #   in certain cases. However, considering GIL, there will be no substantial difference, and the additional
-    #   locking steps may even slow the program down.
+    # @param [Boolean] more_timely Use a lock in scheduler. This avoids a border case that a task is submitted while
+    #   the scheduler is scheduling, thus not asleep. If `more_timely` is set to `false` in such case, the task
+    #   submission will not effectively preempt the scheduler, and will have to wait one more round before it is scheduled,
+    #   and therefore may cause a slight delay.
     #
     def initialize(executor= Executors::ThreadExecutor.new, more_timely=false)
       @running = false
@@ -223,7 +224,7 @@ module TimeMachine
     end
 
     def _bg_enqueueTask(task)
-      return if @result_queue[task.handle].status != :UNSCHEDULED
+      return if @result_queue[task.handle]&.status != :UNSCHEDULED
 
       @result_queue[task.handle].status = :PENDING
       @timeout_queue.insert(@timeout_queue.index do |t|
